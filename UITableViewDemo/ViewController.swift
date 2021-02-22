@@ -19,8 +19,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //ViewController遵守委任需要的協定UITableViewDelegate和UITableViewDataSource必須實作的方法
     //每一組有幾個 cell
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 2 {
+            return 1
+        }else{
             return info[section].count
         }
+    }
     
     //ViewController遵守委任需要的協定UITableViewDelegate和UITableViewDataSource必須實作的方法
     //每個 cell 要顯示的內容
@@ -50,11 +54,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
             
         //顯示的內容
-        //cell.textLabel，型別為UILabel?，分別依照不同組的不同列來設置顯示的文字
-        if let myLabel = cell.textLabel {
-                myLabel.text = "\(info[indexPath.section][indexPath.row])"
-            }
-
+        if indexPath.section == 2 {
+            //設置一個UIImage外，還設置了一個 highlighted 狀態時的UIImage
+            cell.imageView?.image = UIImage(named: "02.jpg")
+            cell.imageView?.highlightedImage = UIImage(named: "03.jpg")
+        }else{
+            //cell.textLabel，型別為UILabel?，分別依照不同組的不同列來設置顯示的文字
+            if let myLabel = cell.textLabel {
+                    myLabel.text = "\(info[indexPath.section][indexPath.row])"
+                }
+        }
+        
         return cell
 
     }
@@ -62,12 +72,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //ViewController遵守委任需要的協定UITableViewDelegate和UITableViewDataSource可以額外設置的方法
     //點選 cell 後執行的動作
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //取消 cell 的選取狀態
-        tableView.deselectRow(
-            at: indexPath as IndexPath, animated: true)
-
-        let name = info[indexPath.section][indexPath.row]
-        print("選擇的是 \(name)")
+        if indexPath.section == 2{
+            //cell 可選取狀態
+            tableView.selectRow(at: indexPath as IndexPath, animated: true, scrollPosition: UITableView.ScrollPosition.middle)
+        }else{
+            //取消 cell 的選取狀態
+            tableView.deselectRow(
+                at: indexPath as IndexPath, animated: true)
+            
+            let name = info[indexPath.section][indexPath.row]
+            print("選擇的是 \(name)")
+        }
+        
     }
     
     //ViewController遵守委任需要的協定UITableViewDelegate和UITableViewDataSource可以額外設置的方法
@@ -82,14 +98,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //ViewController遵守委任需要的協定UITableViewDelegate和UITableViewDataSource可以額外設置的方法
     //有幾組 section
     func numberOfSections(in tableView: UITableView) -> Int {
-        return info.count
+        //最後section再加圖片
+        return info.count+1
     }
     
     //ViewController遵守委任需要的協定UITableViewDelegate和UITableViewDataSource可以額外設置的方法
     //每個 section 的標題
     func tableView(_ tableView: UITableView,
       titleForHeaderInSection section: Int) -> String? {
-        let title = section == 0 ? "籃球" : "棒球"
+        //let title = section == 0 ? "籃球" : "棒球"
+        var title = ""
+        switch section {
+        case 0:
+            title="籃球"
+        case 1:
+            title="棒球"
+        case 2:
+            title="設定 highlighted 時顯示的圖片"
+        default:
+            title = ""
+        }
+        
         return title
     }
     
@@ -107,7 +136,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //設置 section header 的高度
     func tableView(_ tableView: UITableView,
       heightForHeaderInSection section: Int) -> CGFloat {
-        return 80
+        return 35
     }
     
     //ViewController遵守委任需要的協定UITableViewDelegate和UITableViewDataSource可以額外設置的方法
@@ -130,13 +159,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //ViewController遵守委任需要的協定UITableViewDelegate和UITableViewDataSource可以額外設置的方法
     //設置 section footer 的高度
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 30
+        return 25
     }
     
     //ViewController遵守委任需要的協定UITableViewDelegate和UITableViewDataSource可以額外設置的方法
     //設置 cell 的高度
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        if indexPath.section == 2 {
+            return 160
+        }else{
+            return 40
+        }
     }
     
     
